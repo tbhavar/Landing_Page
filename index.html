@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CA Consultancy Portfolio Hub</title>
+    <title>AICA Learning Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         /* BASE STYLES & GRADIENT BACKGROUND */
@@ -28,45 +28,27 @@
             perspective: 1000px;
         }
 
-        /* CUSTOM CURSOR STYLES (GREEN TICK) */
-        #custom-cursor-tick {
+        /* CUSTOM CURSOR STYLES (DIAMOND) */
+        #custom-cursor-diamond {
             position: fixed;
             top: 0;
             left: 0;
-            width: 20px; /* Adjust size as needed */
-            height: 20px;
-            pointer-events: none; /* Allows clicks to pass through */
+            width: 12px;
+            height: 12px;
+            background-color: var(--color-secondary); /* Blue glow */
+            pointer-events: none;
             z-index: 9999;
-            transform: translate(-50%, -50%); /* Center the tick */
-            transition: transform 0.1s ease-out;
-        }
-
-        #custom-cursor-tick::before,
-        #custom-cursor-tick::after {
-            content: '';
-            position: absolute;
-            background-color: #22c55e; /* Green color for the tick */
-            border-radius: 2px;
-        }
-
-        #custom-cursor-tick::before {
-            width: 3px;
-            height: 10px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg) translateY(4px) translateX(-2px);
-        }
-
-        #custom-cursor-tick::after {
-            width: 3px;
-            height: 18px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(45deg) translateY(-2px) translateX(6px);
+            /* Create a diamond shape using rotation */
+            transform: translate(-50%, -50%) rotate(45deg); 
+            transition: width 0.1s ease-out, height 0.1s ease-out, box-shadow 0.2s;
+            box-shadow: 0 0 10px var(--color-secondary), 0 0 20px var(--color-secondary);
         }
         
         .cursor-active {
-            transform: translate(-50%, -50%) scale(1.5); /* Make tick larger on hover */
+            /* Make diamond larger and brighter on hover */
+            width: 18px !important;
+            height: 18px !important;
+            box-shadow: 0 0 15px var(--color-text), 0 0 30px var(--color-text);
         }
 
 
@@ -207,13 +189,13 @@
 </head>
 <body>
 
-    <div id="custom-cursor-tick"></div>
+    <div id="custom-cursor-diamond"></div>
 
     <div class="container fade-in">
-        <h1 style="animation-delay: 0.1s;">📊 CA Consultancy Portfolio Hub</h1>
-        <p style="animation-delay: 0.2s;">A central, secure listing of all my hosted GitHub Pages projects and resources for my consultancy business, updated dynamically.</p>
+        <h1 style="animation-delay: 0.1s;">📊 AICA Learning Hub</h1>
+        <p style="animation-delay: 0.2s;">A central, secure listing of all my hosted GitHub Pages projects and resources for my AICA community, updated dynamically.</p>
 
-        <h2 style="animation-delay: 0.3s;">Active Client & Internal Projects</h2>
+        <h2 style="animation-delay: 0.3s;">Active Learning Projects</h2>
 
         <table id="pages-table" style="animation-delay: 0.4s;">
             <thead>
@@ -234,20 +216,20 @@
         const GITHUB_USERNAME = 'tbhavar';
         const API_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos`;
         const LIST_ELEMENT = document.getElementById('pages-list');
-        // Changed to 'custom-cursor-tick'
-        const CURSOR_TICK = document.getElementById('custom-cursor-tick'); 
+        // Changed to 'custom-cursor-diamond'
+        const CURSOR_DIAMOND = document.getElementById('custom-cursor-diamond'); 
         const INTERACTIVE_ELEMENTS = 'a, button, [role="button"], #pages-table tbody tr';
 
         // --- 1. CUSTOM CURSOR LOGIC ---
         document.addEventListener('mousemove', (e) => {
             // Smoothly move the custom cursor element
-            CURSOR_TICK.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            CURSOR_DIAMOND.style.transform = `translate(${e.clientX}px, ${e.clientY}px) rotate(45deg)`;
         });
 
         // Add visual feedback to cursor on hover of interactive elements
         document.addEventListener('mouseover', (e) => {
             if (e.target.closest(INTERACTIVE_ELEMENTS)) {
-                CURSOR_TICK.classList.add('cursor-active');
+                CURSOR_DIAMOND.classList.add('cursor-active');
             }
         });
 
@@ -256,7 +238,7 @@
                 // Check if the mouse leaves the interactive area
                 const relatedTarget = e.relatedTarget;
                 if (!relatedTarget || !relatedTarget.closest(INTERACTIVE_ELEMENTS)) {
-                    CURSOR_TICK.classList.remove('cursor-active');
+                    CURSOR_DIAMOND.classList.remove('cursor-active');
                 }
             }
         });
