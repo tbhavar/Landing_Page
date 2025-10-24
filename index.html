@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My GitHub Pages Portfolio</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; }
+        h1 { color: #333; }
+        #pages-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        #pages-table th, #pages-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        #pages-table th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to My GitHub Pages Hub</h1>
+    <p>A central listing of all my hosted GitHub Pages projects and resources for my consultancy business, updated automatically.</p>
+
+    <h2>Active GitHub Pages</h2>
+
+    <table id="pages-table">
+        <thead>
+            <tr>
+                <th>Project Name</th>
+                <th>Description</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+        <tbody id="pages-list">
+            <tr><td colspan="3">Loading repositories...</td></tr>
+        </tbody>
+    </table>
+
+    <script>
+        // *** IMPORTANT: REPLACE 'tbhavar' with your actual GitHub username ***
+        const GITHUB_USERNAME = 'tbhavar';
+        const API_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos`;
+        const LIST_ELEMENT = document.getElementById('pages-list');
+
+        async function fetchGitHubPages() {
+            try {
+                // Fetch public repositories
+                const response = await fetch(API_URL);
+                const repos = await response.json();
+
+                // Clear the 'Loading' message
+                LIST_ELEMENT.innerHTML = '';
+
+                let pagesFound = 0;
+
+                repos.forEach(repo => {
+                    // Check if the repository is likely a GitHub Page. 
+                    // This is a simple heuristic: either the repo is named <user>.github.io 
+                    // OR you can check for the "has_pages" property if using an authenticated API request, 
+                    // but for simplicity, we'll assume all relevant ones are project pages.
+
+                    // A project page URL is always <username>.github.io/<repo-name>
+                    const pageUrl = `https://${GITHUB_USERNAME.toLowerCase()}.github.io/${repo.name}`;
+                    
+                    // Filter out the landing page repository itself
+                    if (repo.name.toLowerCase() !== 'github-pages-landing') {
+                        pagesFound++;
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${repo.name}</td>
+                            <td>${repo.description || 'No description provided.'}</td>
+                            <td><a href="${pageUrl}" target="_blank">View Page</a></td>
+                        `;
+                        LIST_ELEMENT.appendChild(row);
+                    }
+                });
+
+                if (pagesFound === 0) {
+                     LIST_ELEMENT.innerHTML = '<tr><td colspan="3">No project-specific GitHub Pages found. Start creating one!</td></tr>';
+                }
+
+            } catch (error) {
+                console.error("Error fetching repositories:", error);
+                LIST_ELEMENT.innerHTML = `<tr><td colspan="3">Failed to load pages. Please check the console for errors and ensure your username is correct.</td></tr>`;
+            }
+        }
+
+        fetchGitHubPages();
+    </script>
+
+</body>
+</html>
