@@ -28,26 +28,47 @@
             perspective: 1000px;
         }
 
-        /* CUSTOM CURSOR STYLES */
-        #custom-cursor-dot {
+        /* CUSTOM CURSOR STYLES (GREEN TICK) */
+        #custom-cursor-tick {
             position: fixed;
             top: 0;
             left: 0;
-            width: 10px;
-            height: 10px;
-            background-color: var(--color-secondary);
-            border-radius: 50%;
+            width: 20px; /* Adjust size as needed */
+            height: 20px;
             pointer-events: none; /* Allows clicks to pass through */
             z-index: 9999;
-            transition: transform 0.1s ease-out, background-color 0.2s;
-            mix-blend-mode: screen; /* Fun effect */
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%); /* Center the tick */
+            transition: transform 0.1s ease-out;
         }
 
-        .cursor-active {
-            transform: translate(-50%, -50%) scale(2.5);
-            background-color: var(--color-text) !important;
+        #custom-cursor-tick::before,
+        #custom-cursor-tick::after {
+            content: '';
+            position: absolute;
+            background-color: #22c55e; /* Green color for the tick */
+            border-radius: 2px;
         }
+
+        #custom-cursor-tick::before {
+            width: 3px;
+            height: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg) translateY(4px) translateX(-2px);
+        }
+
+        #custom-cursor-tick::after {
+            width: 3px;
+            height: 18px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg) translateY(-2px) translateX(6px);
+        }
+        
+        .cursor-active {
+            transform: translate(-50%, -50%) scale(1.5); /* Make tick larger on hover */
+        }
+
 
         /* CONTAINER AND HEADERS */
         .container {
@@ -186,7 +207,7 @@
 </head>
 <body>
 
-    <div id="custom-cursor-dot"></div>
+    <div id="custom-cursor-tick"></div>
 
     <div class="container fade-in">
         <h1 style="animation-delay: 0.1s;">📊 CA Consultancy Portfolio Hub</h1>
@@ -213,19 +234,20 @@
         const GITHUB_USERNAME = 'tbhavar';
         const API_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos`;
         const LIST_ELEMENT = document.getElementById('pages-list');
-        const CURSOR_DOT = document.getElementById('custom-cursor-dot');
+        // Changed to 'custom-cursor-tick'
+        const CURSOR_TICK = document.getElementById('custom-cursor-tick'); 
         const INTERACTIVE_ELEMENTS = 'a, button, [role="button"], #pages-table tbody tr';
 
         // --- 1. CUSTOM CURSOR LOGIC ---
         document.addEventListener('mousemove', (e) => {
             // Smoothly move the custom cursor element
-            CURSOR_DOT.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            CURSOR_TICK.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
         });
 
         // Add visual feedback to cursor on hover of interactive elements
         document.addEventListener('mouseover', (e) => {
             if (e.target.closest(INTERACTIVE_ELEMENTS)) {
-                CURSOR_DOT.classList.add('cursor-active');
+                CURSOR_TICK.classList.add('cursor-active');
             }
         });
 
@@ -234,7 +256,7 @@
                 // Check if the mouse leaves the interactive area
                 const relatedTarget = e.relatedTarget;
                 if (!relatedTarget || !relatedTarget.closest(INTERACTIVE_ELEMENTS)) {
-                    CURSOR_DOT.classList.remove('cursor-active');
+                    CURSOR_TICK.classList.remove('cursor-active');
                 }
             }
         });
