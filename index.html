@@ -28,29 +28,6 @@
             perspective: 1000px;
         }
 
-        /* CUSTOM CURSOR STYLES (DIAMOND) */
-        #custom-cursor-diamond {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 12px;
-            height: 12px;
-            background-color: var(--color-secondary); /* Blue glow */
-            pointer-events: none;
-            z-index: 9999;
-            /* Create a diamond shape using rotation */
-            transform: translate(-50%, -50%) rotate(45deg); 
-            transition: width 0.1s ease-out, height 0.1s ease-out, box-shadow 0.2s;
-            box-shadow: 0 0 10px var(--color-secondary), 0 0 20px var(--color-secondary);
-        }
-        
-        .cursor-active {
-            /* Make diamond larger and brighter on hover */
-            width: 18px !important;
-            height: 18px !important;
-            box-shadow: 0 0 15px var(--color-text), 0 0 30px var(--color-text);
-        }
-
 
         /* CONTAINER AND HEADERS */
         .container {
@@ -323,4 +300,5 @@
 
 </body>
 </html>
+
 
