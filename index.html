@@ -5,300 +5,1072 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AICA Learning Hub by CA Tanmay R Bhavar</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* BASE STYLES & GRADIENT BACKGROUND */
+        /* BASE STYLES & CSS VARIABLES */
         :root {
-            --color-primary: #1e3a8a; /* Deep Blue for a professional feel */
-            --color-secondary: #3b82f6; /* Lighter Blue for accents */
+            --color-primary: #1e3a8a;
+            --color-secondary: #3b82f6;
+            --color-accent: #60a5fa;
             --color-text: #e0e7ff;
-            --color-background: #0f172a; /* Dark Charcoal/Midnight Blue */
-            --color-surface: #1a2333; /* Slightly lighter than background for surfaces */
-            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --color-text-secondary: #94a3b8;
+            --color-background: #0f172a;
+            --color-surface: #1a2333;
+            --color-surface-hover: #26334f;
+            --color-border: #334155;
+            --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.7);
+            --transition-standard: 0.3s ease;
+        }
+
+        [data-theme="light"] {
+            --color-primary: #1e40af;
+            --color-secondary: #3b82f6;
+            --color-accent: #2563eb;
+            --color-text: #1e293b;
+            --color-text-secondary: #64748b;
+            --color-background: #f1f5f9;
+            --color-surface: #ffffff;
+            --color-surface-hover: #f8fafc;
+            --color-border: #e2e8f0;
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Roboto Mono', monospace;
-            background: linear-gradient(135deg, var(--color-background) 0%, #0c0f1d 100%);
+            background: var(--color-background);
             color: var(--color-text);
-            margin: 0;
-            padding: 40px 20px;
             min-height: 100vh;
             overflow-x: hidden;
-            cursor: none; /* Hide default cursor */
-            perspective: 1000px;
+            transition: background 0.3s ease, color 0.3s ease;
+            padding: 20px;
         }
 
+        /* BREADCRUMB NAVIGATION */
+        .breadcrumb {
+            max-width: 1400px;
+            margin: 0 auto 20px;
+            padding: 10px 20px;
+            background-color: var(--color-surface);
+            border-radius: 8px;
+            font-size: 0.9em;
+            opacity: 0;
+            animation: fadeInDown 0.6s ease-out forwards;
+        }
 
-        /* CONTAINER AND HEADERS */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .breadcrumb a {
+            color: var(--color-secondary);
+            text-decoration: none;
+            transition: color var(--transition-standard);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--color-accent);
+        }
+
+        .breadcrumb span {
+            color: var(--color-text-secondary);
+            margin: 0 8px;
+        }
+
+        /* HEADER SECTION */
+        .header-section {
+            max-width: 1400px;
+            margin: 0 auto 40px;
             padding: 40px;
             background-color: var(--color-surface);
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            transform-style: preserve-3d;
+            box-shadow: var(--shadow-card);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
         h1 {
             color: var(--color-secondary);
             font-size: 2.5em;
-            margin-bottom: 10px;
-            /* 3D EFFECT */
             text-shadow: 2px 2px var(--color-primary);
-            transition: transform 0.3s ease;
-        }
-        
-        h1:hover {
-            transform: translateZ(5px);
+            margin: 0;
         }
 
-        h2 {
+        .theme-toggle {
+            background-color: var(--color-primary);
             color: var(--color-text);
-            border-bottom: 2px solid var(--color-primary);
-            padding-bottom: 5px;
-            margin-top: 30px;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1em;
+            transition: all var(--transition-standard);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .description {
+            color: var(--color-text-secondary);
+            line-height: 1.6;
             margin-bottom: 20px;
         }
 
-        p {
-            color: #94a3b8;
-            line-height: 1.6;
-        }
-
-        /* TABLE STYLES */
-        #pages-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
+        /* STATISTICS COUNTER */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
             margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: white;
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--color-text);
+            font-size: 0.9em;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+
+        /* SEARCH AND FILTER BAR */
+        .controls-section {
+            max-width: 1400px;
+            margin: 0 auto 30px;
+            padding: 25px;
+            background-color: var(--color-surface);
+            border-radius: 12px;
+            box-shadow: var(--shadow-card);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.4s;
+        }
+
+        .search-filter-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            background-color: var(--color-background);
+            border: 2px solid var(--color-border);
             border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--shadow-subtle);
+            color: var(--color-text);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1em;
+            transition: all var(--transition-standard);
         }
 
-        #pages-table th, #pages-table td {
-            padding: 15px;
-            text-align: left;
-            border: none;
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--color-secondary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
-        #pages-table thead tr {
-            background-color: var(--color-primary);
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-secondary);
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            padding: 8px 16px;
+            background-color: var(--color-background);
+            border: 2px solid var(--color-border);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all var(--transition-standard);
+            font-size: 0.9em;
             color: var(--color-text);
         }
 
-        #pages-table tbody tr {
+        .filter-tag:hover, .filter-tag.active {
+            background-color: var(--color-primary);
+            border-color: var(--color-secondary);
+            transform: translateY(-2px);
+        }
+
+        /* BENTO GRID LAYOUT */
+        .projects-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.6s;
+        }
+
+        .section-title {
+            color: var(--color-text);
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            padding-left: 20px;
+            border-left: 4px solid var(--color-secondary);
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        /* LOADING SKELETON */
+        .skeleton-card {
             background-color: var(--color-surface);
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        /* HOVER EFFECT - ROW */
-        #pages-table tbody tr:hover {
-            background-color: #26334f;
-            transform: scale(1.01); /* Subtle lift effect */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* LINK STYLES (CTA) */
-        a {
-            color: var(--color-secondary);
-            text-decoration: none;
+            border-radius: 12px;
+            padding: 25px;
+            height: 280px;
             position: relative;
-            transition: color 0.3s ease;
-            display: inline-block;
+            overflow: hidden;
         }
 
-        /* HOVER EFFECT - LINK UNDERLINE ANIMATION */
-        a::after {
+        .skeleton-card::before {
             content: '';
             position: absolute;
-            width: 0;
-            height: 2px;
-            display: block;
-            margin-top: 5px;
-            right: 0;
-            background: var(--color-secondary);
-            transition: width 0.3s ease;
-        }
-
-        a:hover {
-            color: var(--color-text);
-        }
-
-        a:hover::after {
+            top: 0;
+            left: -100%;
             width: 100%;
-            left: 0;
-            background: var(--color-secondary);
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.1), 
+                transparent);
+            animation: skeleton-loading 1.5s infinite;
         }
 
-        /* LINK CLICK EFFECT - RIPPLE (Handled by JS for a better effect) */
-        .ripple-effect {
+        @keyframes skeleton-loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .skeleton-title {
+            width: 70%;
+            height: 24px;
+            background-color: var(--color-border);
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .skeleton-text {
+            width: 100%;
+            height: 16px;
+            background-color: var(--color-border);
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .skeleton-tags {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .skeleton-tag {
+            width: 60px;
+            height: 24px;
+            background-color: var(--color-border);
+            border-radius: 12px;
+        }
+
+        /* PROJECT CARD */
+        .project-card {
+            background-color: var(--color-surface);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow-card);
+            transition: all var(--transition-standard);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .project-card.fade-in-scroll {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--color-secondary);
+        }
+
+        .project-card::before {
+            content: '';
             position: absolute;
-            border-radius: 50%;
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-            background-color: rgba(255, 255, 255, 0.4);
-            pointer-events: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
         }
 
-        @keyframes ripple {
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .project-title {
+            font-size: 1.3em;
+            color: var(--color-secondary);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .project-icon {
+            font-size: 1.5em;
+            color: var(--color-accent);
+        }
+
+        .project-description {
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+            margin-bottom: 15px;
+            min-height: 60px;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 500;
+            transition: all var(--transition-standard);
+        }
+
+        .tag.tax { background-color: #10b98120; color: #10b981; border: 1px solid #10b981; }
+        .tag.gst { background-color: #f59e0b20; color: #f59e0b; border: 1px solid #f59e0b; }
+        .tag.corporate { background-color: #8b5cf620; color: #8b5cf6; border: 1px solid #8b5cf6; }
+        .tag.automation { background-color: #ef444420; color: #ef4444; border: 1px solid #ef4444; }
+        .tag.default { background-color: var(--color-primary); color: var(--color-text); border: 1px solid var(--color-border); }
+
+        .tech-stack {
+            display: flex;
+            gap: 12px;
+            padding-top: 15px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .tech-icon {
+            font-size: 1.3em;
+            transition: transform var(--transition-standard);
+        }
+
+        .tech-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .fa-python { color: #3776ab; }
+        .fa-js { color: #f7df1e; }
+        .fa-react { color: #61dafb; }
+        .fa-html5 { color: #e34c26; }
+        .fa-css3-alt { color: #1572b6; }
+        .fa-database { color: #4db33d; }
+
+        .project-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: var(--color-primary);
+            color: var(--color-text);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all var(--transition-standard);
+            font-weight: 500;
+        }
+
+        .project-link:hover {
+            background-color: var(--color-secondary);
+            transform: translateX(5px);
+        }
+
+        /* HOVER PREVIEW MODAL */
+        .preview-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background-color: var(--color-surface);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            max-width: 600px;
+            width: 90%;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .preview-modal.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: all;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: transform var(--transition-standard);
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+            color: var(--color-secondary);
+        }
+
+        /* BACK TO TOP BUTTON */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: all var(--transition-standard);
+            box-shadow: var(--shadow-card);
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* TOAST NOTIFICATIONS */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background-color: var(--color-surface);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-hover);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            opacity: 0;
+            transform: translateX(400px);
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        .toast.success { border-left: 4px solid #10b981; }
+        .toast.error { border-left: 4px solid #ef4444; }
+        .toast.info { border-left: 4px solid #3b82f6; }
+
+        @keyframes slideIn {
             to {
-                transform: scale(4);
-                opacity: 0;
+                opacity: 1;
+                transform: translateX(0);
             }
         }
 
-        /* INITIAL LOAD ANIMATION (Micro-animation) */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 0.8s ease-out forwards;
+        .toast-icon {
+            font-size: 1.3em;
         }
 
-        @keyframes fadeIn {
+        .toast.success .toast-icon { color: #10b981; }
+        .toast.error .toast-icon { color: #ef4444; }
+        .toast.info .toast-icon { color: #3b82f6; }
+
+        /* ANIMATIONS */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* NO RESULTS MESSAGE */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--color-text-secondary);
+            font-size: 1.2em;
+        }
+
+        .no-results i {
+            font-size: 3em;
+            margin-bottom: 20px;
+            display: block;
+            opacity: 0.5;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .search-filter-container {
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
 
-    <div id="custom-cursor-diamond"></div>
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div class="toast-container" id="toast-container"></div>
 
-    <div class="container fade-in">
-        <h1 style="animation-delay: 0.1s;">📊 AICA Learning Hub by CA Tanmay R Bhavar</h1>
-        <p style="animation-delay: 0.2s;">A central, secure listing of all my hosted GitHub Pages projects and resources for my AICA community, updated dynamically.</p>
+    <!-- MODAL OVERLAY -->
+    <div class="modal-overlay" id="modal-overlay"></div>
 
-        <h2 style="animation-delay: 0.3s;">Active Learning Projects</h2>
-
-        <table id="pages-table" style="animation-delay: 0.4s;">
-            <thead>
-                <tr>
-                    <th>Project Name</th>
-                    <th>Description</th>
-                    <th>Link</th>
-                </tr>
-            </thead>
-            <tbody id="pages-list">
-                <tr><td colspan="3">Loading repositories...</td></tr>
-            </tbody>
-        </table>
+    <!-- PREVIEW MODAL -->
+    <div class="preview-modal" id="preview-modal">
+        <button class="modal-close" id="modal-close"><i class="fas fa-times"></i></button>
+        <div id="modal-content"></div>
     </div>
 
+    <!-- BREADCRUMB -->
+    <nav class="breadcrumb">
+        <a href="#"><i class="fas fa-home"></i> Home</a>
+        <span>/</span>
+        <span>Learning Projects</span>
+    </nav>
+
+    <!-- HEADER SECTION -->
+    <section class="header-section">
+        <div class="header-top">
+            <h1>📊 AICA Learning Hub</h1>
+            <button class="theme-toggle" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+                <span>Toggle Theme</span>
+            </button>
+        </div>
+        <p class="description">
+            A central, secure listing of all my hosted GitHub Pages projects and resources for my AICA community, 
+            featuring dynamic updates and professional tools for tax, GST, and corporate compliance automation.
+        </p>
+        
+        <!-- STATISTICS COUNTER -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <span class="stat-number" id="total-projects">0</span>
+                <span class="stat-label">Total Projects</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="total-technologies">0</span>
+                <span class="stat-label">Technologies</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="total-categories">0</span>
+                <span class="stat-label">Categories</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEARCH AND FILTER BAR -->
+    <section class="controls-section">
+        <div class="search-filter-container">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search projects...">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="filter-tags">
+                <button class="filter-tag active" data-filter="all">All</button>
+                <button class="filter-tag" data-filter="tax">Tax Tools</button>
+                <button class="filter-tag" data-filter="gst">GST</button>
+                <button class="filter-tag" data-filter="corporate">Corporate</button>
+                <button class="filter-tag" data-filter="automation">Automation</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS SECTION -->
+    <section class="projects-section">
+        <h2 class="section-title">Active Learning Projects</h2>
+        <div class="bento-grid" id="projects-grid">
+            <!-- LOADING SKELETONS -->
+            <div class="skeleton-card">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-text"></div>
+                <div class="skeleton-text"></div>
+                <div class="skeleton-tags">
+                    <div class="skeleton-tag"></div>
+                    <div class="skeleton-tag"></div>
+                    <div class="skeleton-tag"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-text"></div>
+                <div class="skeleton-text"></div>
+                <div class="skeleton-tags">
+                    <div class="skeleton-tag"></div>
+                    <div class="skeleton-tag"></div>
+                    <div class="skeleton-tag"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-text"></div>
+                <div class="skeleton-text"></div>
+                <div class="skeleton-tags">
+                    <div class="skeleton-tag"></div>
+                    <div class="skeleton-tag"></div>
+                    <div class="skeleton-tag"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BACK TO TOP BUTTON -->
+    <button class="back-to-top" id="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <script>
-        // *** CRITICAL: REPLACE 'tbhavar' with your actual GitHub username ***
+        // *** CONFIGURATION ***
         const GITHUB_USERNAME = 'tbhavar';
         const API_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos`;
-        const LIST_ELEMENT = document.getElementById('pages-list');
-        // Changed to 'custom-cursor-diamond'
-        const CURSOR_DIAMOND = document.getElementById('custom-cursor-diamond'); 
-        const INTERACTIVE_ELEMENTS = 'a, button, [role="button"], #pages-table tbody tr';
+        
+        // *** DOM ELEMENTS ***
+        const projectsGrid = document.getElementById('projects-grid');
+        const searchInput = document.getElementById('search-input');
+        const filterTags = document.querySelectorAll('.filter-tag');
+        const themeToggle = document.getElementById('theme-toggle');
+        const backToTop = document.getElementById('back-to-top');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const previewModal = document.getElementById('preview-modal');
+        const modalClose = document.getElementById('modal-close');
+        const toastContainer = document.getElementById('toast-container');
+        
+        // *** STATE ***
+        let allProjects = [];
+        let currentFilter = 'all';
+        let currentTheme = 'dark';
 
-        // --- 1. CUSTOM CURSOR LOGIC ---
-        document.addEventListener('mousemove', (e) => {
-            // Smoothly move the custom cursor element
-            CURSOR_DIAMOND.style.transform = `translate(${e.clientX}px, ${e.clientY}px) rotate(45deg)`;
-        });
+        // *** UTILITY FUNCTIONS ***
+        
+        // Toast Notification System
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const iconMap = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                info: 'fa-info-circle'
+            };
+            
+            toast.innerHTML = `
+                <i class="fas ${iconMap[type]} toast-icon"></i>
+                <span>${message}</span>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
 
-        // Add visual feedback to cursor on hover of interactive elements
-        document.addEventListener('mouseover', (e) => {
-            if (e.target.closest(INTERACTIVE_ELEMENTS)) {
-                CURSOR_DIAMOND.classList.add('cursor-active');
-            }
-        });
+        // Categorize projects based on keywords
+        function categorizeProject(name, description) {
+            const text = (name + ' ' + (description || '')).toLowerCase();
+            
+            if (text.includes('tax') || text.includes('income') || text.includes('itr')) return 'tax';
+            if (text.includes('gst')) return 'gst';
+            if (text.includes('corporate') || text.includes('company') || text.includes('compliance')) return 'corporate';
+            if (text.includes('automat') || text.includes('tool') || text.includes('manager')) return 'automation';
+            
+            return 'default';
+        }
 
-        document.addEventListener('mouseout', (e) => {
-            if (!e.target.closest(INTERACTIVE_ELEMENTS) || e.target.tagName.toLowerCase() === 'body') {
-                // Check if the mouse leaves the interactive area
-                const relatedTarget = e.relatedTarget;
-                if (!relatedTarget || !relatedTarget.closest(INTERACTIVE_ELEMENTS)) {
-                    CURSOR_DIAMOND.classList.remove('cursor-active');
-                }
-            }
-        });
+        // Detect technologies from repo
+        function detectTechnologies(name, description) {
+            const text = (name + ' ' + (description || '')).toLowerCase();
+            const techs = [];
+            
+            if (text.includes('python') || text.includes('py')) techs.push('python');
+            if (text.includes('javascript') || text.includes('js')) techs.push('js');
+            if (text.includes('react')) techs.push('react');
+            if (text.includes('html')) techs.push('html5');
+            if (text.includes('css')) techs.push('css3-alt');
+            if (text.includes('database') || text.includes('sql')) techs.push('database');
+            
+            // Default if none detected
+            if (techs.length === 0) techs.push('html5', 'css3-alt', 'js');
+            
+            return techs;
+        }
 
-        // --- 2. LINK CLICK EFFECT (RIPPLE) ---
-        document.addEventListener('click', (e) => {
-            const interactiveElement = e.target.closest(INTERACTIVE_ELEMENTS);
-            if (interactiveElement) {
-                const rect = interactiveElement.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height) * 1.5;
+        // Create project card HTML
+        function createProjectCard(repo) {
+            const category = categorizeProject(repo.name, repo.description);
+            const technologies = detectTechnologies(repo.name, repo.description);
+            const pageUrl = `https://${GITHUB_USERNAME.toLowerCase()}.github.io/${repo.name}`;
+            
+            const techIcons = technologies.map(tech => 
+                `<i class="fab fa-${tech} tech-icon" title="${tech}"></i>`
+            ).join('');
+            
+            return `
+                <div class="project-card" data-category="${category}" data-name="${repo.name.toLowerCase()}" data-description="${(repo.description || '').toLowerCase()}">
+                    <div class="project-header">
+                        <div>
+                            <h3 class="project-title">${repo.name}</h3>
+                        </div>
+                        <i class="fas fa-cube project-icon"></i>
+                    </div>
+                    <p class="project-description">${repo.description || 'Professional consultancy project for AICA community members.'}</p>
+                    <div class="project-tags">
+                        <span class="tag ${category}">${category.toUpperCase()}</span>
+                        ${repo.language ? `<span class="tag default">${repo.language}</span>` : ''}
+                    </div>
+                    <div class="tech-stack">
+                        ${techIcons}
+                    </div>
+                    <a href="${pageUrl}" target="_blank" class="project-link" onclick="event.stopPropagation()">
+                        View Project <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            `;
+        }
 
-                const ripple = document.createElement('span');
-                ripple.classList.add('ripple-effect');
-                ripple.style.width = ripple.style.height = `${size}px`;
-                // Position the ripple at the click location relative to the element
-                ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
-                ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
-
-                interactiveElement.style.position = interactiveElement.style.position === 'static' ? 'relative' : interactiveElement.style.position;
-                interactiveElement.style.overflow = 'hidden'; // Ensure ripple stays within bounds
-
-                interactiveElement.appendChild(ripple);
-
-                // Clean up the ripple element after the animation
-                ripple.addEventListener('animationend', () => {
-                    ripple.remove();
-                });
-            }
-        });
-
-        // --- 3. GITHUB API FUNCTIONALITY (Preserved) ---
-        async function fetchGitHubPages() {
-            try {
-                const response = await fetch(API_URL);
-                const repos = await response.json();
-
-                LIST_ELEMENT.innerHTML = ''; // Clear loading message
-
-                let pagesFound = 0;
-
-                if (Array.isArray(repos)) {
-                    repos.forEach(repo => {
-                        // Filter out the landing page repository itself (replace 'github-pages-landing' with the actual repo name if it's different)
-                        if (repo.name.toLowerCase() !== 'github-pages-landing') {
-                            pagesFound++;
-                            const pageUrl = `https://${GITHUB_USERNAME.toLowerCase()}.github.io/${repo.name}`;
-                            
-                            const row = document.createElement('tr');
-                            // Add click listener to the row for navigation and visual feedback
-                            row.addEventListener('click', () => {
-                                window.open(pageUrl, '_blank');
-                            });
-
-                            row.innerHTML = `
-                                <td>${repo.name}</td>
-                                <td>${repo.description || 'Consultancy project details.'}</td>
-                                <td><a href="${pageUrl}" target="_blank" onclick="event.stopPropagation()">View Page</a></td>
-                            `;
-                            LIST_ELEMENT.appendChild(row);
-                        }
-                    });
-                }
+        // Animate cards on scroll
+        function animateOnScroll() {
+            const cards = document.querySelectorAll('.project-card:not(.fade-in-scroll)');
+            
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight - 100;
                 
-                if (pagesFound === 0) {
-                     LIST_ELEMENT.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #94a3b8;">No hosted client projects found. Time to launch your first one!</td></tr>`;
+                if (isVisible) {
+                    card.classList.add('fade-in-scroll');
                 }
+            });
+        }
 
-            } catch (error) {
-                console.error("Error fetching repositories:", error);
-                LIST_ELEMENT.innerHTML = `<tr><td colspan="3" style="text-align: center; color: red;">Failed to load pages. Ensure the username is correct and check the console.</td></tr>`;
+        // Update statistics
+        function updateStatistics() {
+            const totalProjects = allProjects.length;
+            const technologies = new Set();
+            const categories = new Set();
+            
+            allProjects.forEach(project => {
+                const category = categorizeProject(project.name, project.description);
+                categories.add(category);
+                
+                const techs = detectTechnologies(project.name, project.description);
+                techs.forEach(tech => technologies.add(tech));
+            });
+            
+            animateCounter('total-projects', totalProjects);
+            animateCounter('total-technologies', technologies.size);
+            animateCounter('total-categories', categories.size);
+        }
+
+        // Animate counter numbers
+        function animateCounter(elementId, targetValue) {
+            const element = document.getElementById(elementId);
+            const duration = 1000;
+            const steps = 30;
+            const increment = targetValue / steps;
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= targetValue) {
+                    element.textContent = targetValue;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, duration / steps);
+        }
+
+        // Filter and search projects
+        function filterProjects() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const cards = document.querySelectorAll('.project-card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                const category = card.dataset.category;
+                const name = card.dataset.name;
+                const description = card.dataset.description;
+                
+                const matchesFilter = currentFilter === 'all' || category === currentFilter;
+                const matchesSearch = name.includes(searchTerm) || description.includes(searchTerm);
+                
+                if (matchesFilter && matchesSearch) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Show no results message
+            if (visibleCount === 0) {
+                if (!document.querySelector('.no-results')) {
+                    projectsGrid.innerHTML += `
+                        <div class="no-results">
+                            <i class="fas fa-search"></i>
+                            <p>No projects found matching your criteria.</p>
+                        </div>
+                    `;
+                }
+            } else {
+                const noResults = document.querySelector('.no-results');
+                if (noResults) noResults.remove();
             }
         }
 
-        // Apply fade-in animation to all main content elements
-        document.querySelectorAll('.fade-in').forEach((el, index) => {
-            el.style.animationDelay = `${0.1 * index}s`;
+        // Fetch GitHub repositories
+        async function fetchGitHubPages() {
+            try {
+                const response = await fetch(API_URL);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch repositories');
+                }
+                
+                const repos = await response.json();
+                
+                // Filter out the landing page itself
+                allProjects = repos.filter(repo => 
+                    repo.name.toLowerCase() !== 'github-pages-landing' &&
+                    repo.name.toLowerCase() !== `${GITHUB_USERNAME.toLowerCase()}.github.io`
+                );
+                
+                if (allProjects.length === 0) {
+                    projectsGrid.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-folder-open"></i>
+                            <p>No hosted projects found yet. Time to launch your first one!</p>
+                        </div>
+                    `;
+                    showToast('No projects found', 'info');
+                    return;
+                }
+                
+                // Clear loading skeletons
+                projectsGrid.innerHTML = '';
+                
+                // Create project cards
+                allProjects.forEach((repo, index) => {
+                    projectsGrid.innerHTML += createProjectCard(repo);
+                });
+                
+                // Update statistics
+                updateStatistics();
+                
+                // Trigger scroll animation
+                setTimeout(animateOnScroll, 100);
+                
+                showToast(`Successfully loaded ${allProjects.length} projects`, 'success');
+                
+            } catch (error) {
+                console.error('Error fetching repositories:', error);
+                projectsGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Failed to load projects. Please check your connection and try again.</p>
+                    </div>
+                `;
+                showToast('Failed to load projects', 'error');
+            }
+        }
+
+        // Theme toggle functionality
+        themeToggle.addEventListener('click', () => {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            
+            const icon = themeToggle.querySelector('i');
+            icon.className = currentTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+            
+            localStorage.setItem('theme', currentTheme);
+            showToast(`Switched to ${currentTheme} mode`, 'success');
         });
-        
-        // Initial data fetch
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            themeToggle.click();
+        }
+
+        // Search functionality
+        searchInput.addEventListener('input', filterProjects);
+
+        // Filter functionality
+        filterTags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                filterTags.forEach(t => t.classList.remove('active'));
+                tag.classList.add('active');
+                currentFilter = tag.dataset.filter;
+                filterProjects();
+            });
+        });
+
+        // Back to top button
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+            
+            animateOnScroll();
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Modal functionality (for future hover preview feature)
+        modalClose.addEventListener('click', () => {
+            previewModal.classList.remove('active');
+            modalOverlay.classList.remove('active');
+        });
+
+        modalOverlay.addEventListener('click', () => {
+            previewModal.classList.remove('active');
+            modalOverlay.classList.remove('active');
+        });
+
+        // Initialize
         fetchGitHubPages();
     </script>
 
 </body>
 </html>
-
-
